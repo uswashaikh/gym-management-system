@@ -1,0 +1,187 @@
+<!-- 
+  File: member.html
+  Location: /gym-management-system/member.html
+  Purpose: Member Dashboard for Gym Management System
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Dashboard - Gym Management</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-dumbbell"></i>
+                <h2>FitZone</h2>
+                <p>Member Portal</p>
+            </div>
+
+            <ul class="sidebar-menu">
+                <li><a href="#profile" class="active" onclick="showMemberSection('profile')">
+                    <i class="fas fa-user"></i> <span>My Profile</span>
+                </a></li>
+                <li><a href="#bills" onclick="showMemberSection('bills')">
+                    <i class="fas fa-file-invoice-dollar"></i> <span>My Bills</span>
+                </a></li>
+                <li><a href="#notifications" onclick="showMemberSection('notifications')">
+                    <i class="fas fa-bell"></i> <span>Notifications</span>
+                </a></li>
+            </ul>
+
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <h1 id="pageTitle">My Profile</h1>
+                <div class="user-info">
+                    <img id="memberPhoto" src="https://ui-avatars.com/api/?name=Member&background=FF6B35&color=fff" alt="Member">
+                    <div>
+                        <strong id="memberName">Member</strong>
+                        <p style="font-size: 12px; color: #6C757D;" id="memberEmail">member@gym.com</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Section -->
+            <section id="profile-section" class="content-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <h3>Membership Status</h3>
+                            <div class="stat-card-icon" style="background: rgba(6, 214, 160, 0.1); color: var(--success);">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="memberStatus" style="font-size: 24px; text-transform: capitalize;">Active</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <h3>Current Package</h3>
+                            <div class="stat-card-icon" style="background: rgba(255, 107, 53, 0.1); color: var(--primary);">
+                                <i class="fas fa-box"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="memberPackage" style="font-size: 24px;">-</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <h3>Total Bills</h3>
+                            <div class="stat-card-icon" style="background: rgba(0, 78, 137, 0.1); color: var(--secondary);">
+                                <i class="fas fa-file-invoice"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="totalBillsCount">0</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <h3>Pending Payments</h3>
+                            <div class="stat-card-icon" style="background: rgba(239, 71, 111, 0.1); color: var(--danger);">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="pendingBillsCount">0</div>
+                    </div>
+                </div>
+
+                <!-- Profile Details Card -->
+                <div class="content-card">
+                    <h2>Profile Information</h2>
+                    <div class="profile-info">
+                        <div class="profile-photo-section">
+                            <img id="profilePhotoLarge" src="https://ui-avatars.com/api/?name=Member&background=FF6B35&color=fff&size=150" alt="Profile Photo" style="width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--primary); object-fit: cover;">
+                        </div>
+                        <div class="profile-details-grid">
+                            <div class="profile-detail-item">
+                                <i class="fas fa-user"></i>
+                                <div>
+                                    <p class="detail-label">Full Name</p>
+                                    <p class="detail-value" id="profileName">-</p>
+                                </div>
+                            </div>
+                            <div class="profile-detail-item">
+                                <i class="fas fa-envelope"></i>
+                                <div>
+                                    <p class="detail-label">Email Address</p>
+                                    <p class="detail-value" id="profileEmail">-</p>
+                                </div>
+                            </div>
+                            <div class="profile-detail-item">
+                                <i class="fas fa-phone"></i>
+                                <div>
+                                    <p class="detail-label">Phone Number</p>
+                                    <p class="detail-value" id="profilePhone">-</p>
+                                </div>
+                            </div>
+                            <div class="profile-detail-item">
+                                <i class="fas fa-birthday-cake"></i>
+                                <div>
+                                    <p class="detail-label">Date of Birth</p>
+                                    <p class="detail-value" id="profileDOB">-</p>
+                                </div>
+                            </div>
+                            <div class="profile-detail-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <div>
+                                    <p class="detail-label">Join Date</p>
+                                    <p class="detail-value" id="profileJoinDate">-</p>
+                                </div>
+                            </div>
+                            <div class="profile-detail-item">
+                                <i class="fas fa-box"></i>
+                                <div>
+                                    <p class="detail-label">Package</p>
+                                    <p class="detail-value" id="profilePackage">-</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package Details Card -->
+                <div class="content-card">
+                    <h2>Package Information</h2>
+                    <div id="packageDetailsContainer"></div>
+                </div>
+            </section>
+
+            <!-- Bills Section -->
+            <section id="bills-section" class="content-section hidden">
+                <div class="content-card">
+                    <h2>My Bills & Receipts</h2>
+                    <div id="billsContainer"></div>
+                </div>
+            </section>
+
+            <!-- Notifications Section -->
+            <section id="notifications-section" class="content-section hidden">
+                <div class="content-card">
+                    <h2>Gym Notifications & Announcements</h2>
+                    <div id="notificationsContainer"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script type="module" src="member.js"></script>
+</body>
+</html>

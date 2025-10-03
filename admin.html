@@ -1,0 +1,452 @@
+<!-- 
+  File: admin.html
+  Location: /gym-management-system/admin.html
+  Purpose: Admin Dashboard for Gym Management System
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Gym Management</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-dumbbell"></i>
+                <h2>FitZone</h2>
+                <p>Admin Panel</p>
+            </div>
+
+            <ul class="sidebar-menu">
+                <li><a href="#dashboard" class="active" onclick="showSection('dashboard')">
+                    <i class="fas fa-home"></i> <span>Dashboard</span>
+                </a></li>
+                <li><a href="#members" onclick="showSection('members')">
+                    <i class="fas fa-users"></i> <span>Members</span>
+                </a></li>
+                <li><a href="#billing" onclick="showSection('billing')">
+                    <i class="fas fa-file-invoice-dollar"></i> <span>Billing</span>
+                </a></li>
+                <li><a href="#notifications" onclick="showSection('notifications')">
+                    <i class="fas fa-bell"></i> <span>Notifications</span>
+                </a></li>
+                <li><a href="#reports" onclick="showSection('reports')">
+                    <i class="fas fa-chart-bar"></i> <span>Reports</span>
+                </a></li>
+                <li><a href="#users" onclick="showSection('users')">
+                    <i class="fas fa-user-shield"></i> <span>User Accounts</span>
+                </a></li>
+            </ul>
+
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <h1 id="pageTitle">Dashboard</h1>
+                <div class="user-info">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=FF6B35&color=fff" alt="Admin">
+                    <div>
+                        <strong id="adminName">Admin</strong>
+                        <p style="font-size: 12px; color: #6C757D;">Administrator</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="content-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <h3>Total Members</h3>
+                            <div class="stat-card-icon" style="background: rgba(255, 107, 53, 0.1); color: var(--primary);">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="totalMembers">0</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <h3>Active Members</h3>
+                            <div class="stat-card-icon" style="background: rgba(6, 214, 160, 0.1); color: var(--success);">
+                                <i class="fas fa-user-check"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="activeMembers">0</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <h3>Total Bills</h3>
+                            <div class="stat-card-icon" style="background: rgba(0, 78, 137, 0.1); color: var(--secondary);">
+                                <i class="fas fa-file-invoice"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="totalBills">0</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <h3>Pending Bills</h3>
+                            <div class="stat-card-icon" style="background: rgba(239, 71, 111, 0.1); color: var(--danger);">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="pendingBills">0</div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h2>Recent Members</h2>
+                    <div id="recentMembersTable"></div>
+                </div>
+            </section>
+
+            <!-- Members Section -->
+            <section id="members-section" class="content-section hidden">
+                <div class="content-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2>Member Management</h2>
+                        <button class="btn btn-primary" onclick="showAddMemberModal()">
+                            <i class="fas fa-plus"></i> Add Member
+                        </button>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(0, 78, 137, 0.1)); padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid var(--primary);">
+                        <h4 style="margin-bottom: 10px; color: var(--dark);"><i class="fas fa-info-circle"></i> Default Login Credentials</h4>
+                        <p style="font-size: 14px; color: var(--gray); margin-bottom: 5px;">
+                            When you add a new member, their login credentials are automatically created:
+                        </p>
+                        <p style="font-size: 14px; color: var(--dark);">
+                            <strong>Email:</strong> Member's email address<br>
+                            <strong>Password:</strong> FirstName@123 (e.g., John@123 for John Doe)
+                        </p>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <input type="text" id="searchMember" placeholder="Search members by name, email or phone..." 
+                               style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px;"
+                               onkeyup="searchMembers()">
+                    </div>
+
+                    <div id="membersTableContainer"></div>
+                </div>
+            </section>
+
+            <!-- Billing Section -->
+            <section id="billing-section" class="content-section hidden">
+                <div class="content-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2>Billing Management</h2>
+                        <button class="btn btn-primary" onclick="showCreateBillModal()">
+                            <i class="fas fa-plus"></i> Create Bill
+                        </button>
+                    </div>
+                    <div id="billsTableContainer"></div>
+                </div>
+            </section>
+
+            <!-- Notifications Section -->
+            <section id="notifications-section" class="content-section hidden">
+                <div class="content-card">
+                    <h2>Send Notification</h2>
+                    <form id="notificationForm" onsubmit="sendNotification(event)">
+                        <div class="form-group-dash">
+                            <label>Notification Title</label>
+                            <input type="text" id="notificationTitle" required placeholder="Enter notification title">
+                        </div>
+                        <div class="form-group-dash">
+                            <label>Message</label>
+                            <textarea id="notificationMessage" rows="4" required placeholder="Enter notification message"></textarea>
+                        </div>
+                        <div class="form-group-dash">
+                            <label>Target Audience</label>
+                            <select id="notificationTarget" required>
+                                <option value="all">All Members</option>
+                                <option value="active">Active Members Only</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Send Notification
+                        </button>
+                    </form>
+                </div>
+
+                <div class="content-card">
+                    <h2>Notification History</h2>
+                    <div id="notificationHistoryContainer"></div>
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports-section" class="content-section hidden">
+                <div class="content-card">
+                    <h2>Export Reports</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card" style="cursor: pointer;" onclick="exportMembersCSV()">
+                            <div style="text-align: center;">
+                                <i class="fas fa-users" style="font-size: 40px; color: var(--primary); margin-bottom: 10px;"></i>
+                                <h3>Export Members</h3>
+                                <p style="color: var(--gray); font-size: 14px;">Download all members data</p>
+                                <button class="btn btn-primary" style="margin-top: 15px;">
+                                    <i class="fas fa-download"></i> Export CSV
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="stat-card" style="cursor: pointer;" onclick="exportBillsCSV()">
+                            <div style="text-align: center;">
+                                <i class="fas fa-file-invoice" style="font-size: 40px; color: var(--success); margin-bottom: 10px;"></i>
+                                <h3>Export Bills</h3>
+                                <p style="color: var(--gray); font-size: 14px;">Download all billing data</p>
+                                <button class="btn btn-success" style="margin-top: 15px;">
+                                    <i class="fas fa-download"></i> Export CSV
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- User Accounts Section -->
+            <section id="users-section" class="content-section hidden">
+                <div class="content-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2>User Account Management</h2>
+                        <button class="btn btn-primary" onclick="showAddUserModal()">
+                            <i class="fas fa-user-plus"></i> Create User Account
+                        </button>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, rgba(27, 231, 255, 0.1), rgba(0, 78, 137, 0.1)); padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid var(--accent);">
+                        <h4 style="margin-bottom: 10px; color: var(--dark);"><i class="fas fa-info-circle"></i> About User Accounts</h4>
+                        <p style="font-size: 14px; color: var(--gray); margin-bottom: 5px;">
+                            User accounts can search for members and view gym packages. They have read-only access.
+                        </p>
+                        <p style="font-size: 14px; color: var(--dark);">
+                            <strong>Default Password:</strong> FirstName@123 (e.g., Tom@123 for Tom Wilson)
+                        </p>
+                    </div>
+
+                    <div id="usersTableContainer"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add Member Modal -->
+    <div id="addMemberModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Member</h2>
+                <span class="close" onclick="closeModal('addMemberModal')">&times;</span>
+            </div>
+            <form id="addMemberForm" onsubmit="addMember(event)">
+                <div class="form-grid">
+                    <div class="form-group-dash">
+                        <label>Full Name *</label>
+                        <input type="text" id="memberName" required>
+                    </div>
+                    <div class="form-group-dash">
+                        <label>Email *</label>
+                        <input type="email" id="memberEmail" required>
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group-dash">
+                        <label>Phone *</label>
+                        <input type="tel" id="memberPhone" required>
+                    </div>
+                    <div class="form-group-dash">
+                        <label>Date of Birth</label>
+                        <input type="date" id="memberDOB">
+                    </div>
+                </div>
+                <div class="form-group-dash">
+                    <label>Fee Package *</label>
+                    <select id="memberPackage" required>
+                        <option value="">Select Package</option>
+                        <option value="Basic">Basic - ₹1000/month</option>
+                        <option value="Standard">Standard - ₹2000/month</option>
+                        <option value="Premium">Premium - ₹3000/month</option>
+                    </select>
+                </div>
+                <div class="form-group-dash">
+                    <label>Photo URL (Optional)</label>
+                    <input type="url" id="memberPhoto" placeholder="https://example.com/photo.jpg">
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Member
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addMemberModal')">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Member Modal -->
+    <div id="editMemberModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Member</h2>
+                <span class="close" onclick="closeModal('editMemberModal')">&times;</span>
+            </div>
+            <form id="editMemberForm" onsubmit="updateMember(event)">
+                <input type="hidden" id="editMemberId">
+                <div class="form-grid">
+                    <div class="form-group-dash">
+                        <label>Full Name *</label>
+                        <input type="text" id="editMemberName" required>
+                    </div>
+                    <div class="form-group-dash">
+                        <label>Email *</label>
+                        <input type="email" id="editMemberEmail" required>
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group-dash">
+                        <label>Phone *</label>
+                        <input type="tel" id="editMemberPhone" required>
+                    </div>
+                    <div class="form-group-dash">
+                        <label>Date of Birth</label>
+                        <input type="date" id="editMemberDOB">
+                    </div>
+                </div>
+                <div class="form-group-dash">
+                    <label>Fee Package *</label>
+                    <select id="editMemberPackage" required>
+                        <option value="Basic">Basic - ₹1000/month</option>
+                        <option value="Standard">Standard - ₹2000/month</option>
+                        <option value="Premium">Premium - ₹3000/month</option>
+                    </select>
+                </div>
+                <div class="form-group-dash">
+                    <label>Status</label>
+                    <select id="editMemberStatus" required>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+                <div class="form-group-dash">
+                    <label>Photo URL (Optional)</label>
+                    <input type="url" id="editMemberPhoto">
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Update Member
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editMemberModal')">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Create Bill Modal -->
+    <div id="createBillModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create Bill</h2>
+                <span class="close" onclick="closeModal('createBillModal')">&times;</span>
+            </div>
+            <form id="createBillForm" onsubmit="createBill(event)">
+                <div class="form-group-dash">
+                    <label>Select Member *</label>
+                    <select id="billMemberId" required onchange="updateBillAmount()">
+                        <option value="">Choose a member</option>
+                    </select>
+                </div>
+                <div class="form-group-dash">
+                    <label>Package *</label>
+                    <select id="billPackage" required onchange="updateBillAmount()">
+                        <option value="">Select Package</option>
+                        <option value="Basic" data-price="1000">Basic - ₹1000/month</option>
+                        <option value="Standard" data-price="2000">Standard - ₹2000/month</option>
+                        <option value="Premium" data-price="3000">Premium - ₹3000/month</option>
+                    </select>
+                </div>
+                <div class="form-group-dash">
+                    <label>Amount *</label>
+                    <input type="number" id="billAmount" required readonly>
+                </div>
+                <div class="form-group-dash">
+                    <label>Due Date *</label>
+                    <input type="date" id="billDueDate" required>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Create Bill
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('createBillModal')">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add User Account Modal -->
+    <div id="addUserModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create User Account</h2>
+                <span class="close" onclick="closeModal('addUserModal')">&times;</span>
+            </div>
+            <form id="addUserForm" onsubmit="addUser(event)">
+                <div class="form-group-dash">
+                    <label>Full Name *</label>
+                    <input type="text" id="userName" required placeholder="Enter full name">
+                </div>
+                <div class="form-group-dash">
+                    <label>Email *</label>
+                    <input type="email" id="userEmail" required placeholder="Enter email address">
+                </div>
+                <div class="form-group-dash">
+                    <label>Phone</label>
+                    <input type="tel" id="userPhone" placeholder="Enter phone number (optional)">
+                </div>
+                <div style="background: #f0f0f0; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
+                    <p style="font-size: 14px; color: var(--gray); margin: 0;">
+                        <i class="fas fa-lock"></i> <strong>Default Password:</strong> 
+                        <span style="color: var(--dark);">FirstName@123</span>
+                    </p>
+                    <p style="font-size: 12px; color: var(--gray); margin: 5px 0 0 0;">
+                        Example: For "John Doe", password will be "John@123"
+                    </p>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i> Create User
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addUserModal')">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script type="module" src="admin.js"></script>
+</body>
+</html>
