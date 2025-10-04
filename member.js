@@ -12,9 +12,6 @@ import {
   getDocs,
   doc,
   getDoc,
-  query,
-  where,
-  orderBy,
   addDoc,
   Timestamp,
 } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
@@ -78,30 +75,40 @@ onAuthStateChanged(auth, async (user) => {
 // Load member data
 async function loadMemberData() {
   try {
-    // Find member by email
-    const membersQuery = query(collection(db, "members"), where("email", "==", currentUser.email));
+    // Fetch all members - NO query, NO where clause
+    const membersSnapshot = await getDocs(collection(db, "members"));
 
-    const membersSnapshot = await getDocs(membersQuery);
+    // Find member in JavaScript
+    let foundMember = null;
+    membersSnapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      if (data.email === currentUser.email) {
+        foundMember = {
+          id: docSnap.id,
+          ...data,
+        };
+      }
+    });
 
-    if (membersSnapshot.empty) {
+    if (!foundMember) {
       showToast("Member profile not found. Please contact admin.", "error");
       return;
     }
 
-    const memberDoc = membersSnapshot.docs[0];
-    memberData = {
-      id: memberDoc.id,
-      ...memberDoc.data(),
-    };
+    memberData = foundMember;
 
     // Update UI
     updateProfileUI();
 
     // Load bills
-    await loadMemberBills();
+    setTimeout(() => {
+      loadMemberBills();
+    }, 100);
 
     // Load notifications
-    await loadNotifications();
+    setTimeout(() => {
+      loadNotifications();
+    }, 100);
   } catch (error) {
     console.error("Error loading member data:", error);
     showToast("Failed to load profile data", "error");
@@ -189,20 +196,36 @@ function displayPackageInfo() {
   document.getElementById("packageDetailsContainer").innerHTML = html;
 }
 
-// Load member bills
+// Load member bills - SIMPLE VERSION
 async function loadMemberBills() {
   try {
-    const billsQuery = query(
-      collection(db, "bills"),
-      where("memberId", "==", memberData.id),
-      orderBy("createdAt", "desc")
-    );
+    console.log("Loading bills for member:", memberData.id);
 
-    const billsSnapshot = await getDocs(billsQuery);
-    memberBills = billsSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    // Fetch ALL bills - NO query
+    const billsSnapshot = await getDocs(collection(db, "bills"));
+
+    console.log("Total bills in database:", billsSnapshot.size);
+
+    // Filter in JavaScript
+    memberBills = [];
+    billsSnapshot.forEach((docSnap) => {
+      const billData = docSnap.data();
+      if (billData.memberId === memberData.id) {
+        memberBills.push({
+          id: docSnap.id,
+          ...billData,
+        });
+      }
+    });
+
+    console.log("Bills for this member:", memberBills.length);
+
+    // Sort in JavaScript
+    memberBills.sort((a, b) => {
+      const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+      const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+      return timeB - timeA;
+    });
 
     // Update stats
     const pendingBills = memberBills.filter((b) => b.status === "pending").length;
@@ -213,7 +236,10 @@ async function loadMemberBills() {
     displayBills();
   } catch (error) {
     console.error("Error loading bills:", error);
-    showToast("Failed to load bills", "error");
+    memberBills = [];
+    document.getElementById("totalBillsCount").textContent = 0;
+    document.getElementById("pendingBillsCount").textContent = 0;
+    displayBills();
   }
 }
 
@@ -326,25 +352,43 @@ window.downloadReceipt = function (billId) {
   logAction("RECEIPT_DOWNLOADED", { billId });
 };
 
-// Load notifications
+// Load notifications - SIMPLE VERSION
 async function loadNotifications() {
   try {
-    const notificationsQuery = query(
-      collection(db, "notifications"),
-      where("isActive", "==", true),
-      orderBy("createdAt", "desc")
-    );
+    console.log("Loading notifications...");
 
-    const notificationsSnapshot = await getDocs(notificationsQuery);
-    const notifications = notificationsSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    // Fetch ALL notifications - NO query
+    const notificationsSnapshot = await getDocs(collection(db, "notifications"));
+
+    console.log("Total notifications:", notificationsSnapshot.size);
+
+    // Filter in JavaScript
+    const notifications = [];
+    notificationsSnapshot.forEach((docSnap) => {
+      const notifData = docSnap.data();
+      if (notifData.isActive === true) {
+        if (notifData.targetRole === "all" || notifData.targetRole === "active" || notifData.targetRole === "members") {
+          notifications.push({
+            id: docSnap.id,
+            ...notifData,
+          });
+        }
+      }
+    });
+
+    console.log("Filtered notifications:", notifications.length);
+
+    // Sort in JavaScript
+    notifications.sort((a, b) => {
+      const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+      const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+      return timeB - timeA;
+    });
 
     displayNotifications(notifications);
   } catch (error) {
     console.error("Error loading notifications:", error);
-    showToast("Failed to load notifications", "error");
+    displayNotifications([]);
   }
 }
 

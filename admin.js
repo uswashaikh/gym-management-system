@@ -615,14 +615,14 @@ window.sendNotification = async function (event) {
   };
 
   try {
-    await addDoc(collection(db, "notifications"), notificationData);
+    const docRef = await addDoc(collection(db, "notifications"), notificationData);
     showToast("Notification sent successfully!", "success");
     document.getElementById("notificationForm").reset();
     loadNotificationHistory();
-    logAction("NOTIFICATION_SENT", notificationData);
+    logAction("NOTIFICATION_SENT", { notificationId: docRef.id, ...notificationData });
   } catch (error) {
     console.error("Error sending notification:", error);
-    showToast("Failed to send notification", "error");
+    showToast("Failed to send notification: " + error.message, "error");
   }
 };
 
