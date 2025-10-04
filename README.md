@@ -289,22 +289,6 @@ service cloud.firestore {
 
 ---
 
-## 📸 Screenshots
-
-### Login Page
-![Login](https://via.placeholder.com/800x400/FF6B35/FFFFFF?text=Login+Page)
-
-### Admin Dashboard
-![Admin Dashboard](https://via.placeholder.com/800x400/004E89/FFFFFF?text=Admin+Dashboard)
-
-### Member Profile
-![Member Profile](https://via.placeholder.com/800x400/06D6A0/FFFFFF?text=Member+Profile)
-
-### User Search
-![User Search](https://via.placeholder.com/800x400/1BE7FF/000000?text=User+Search)
-
----
-
 ## 🗄️ Database Schema
 
 ### Collections
@@ -522,12 +506,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 📞 Support
-
-For support, email your.email@example.com or create an issue in the GitHub repository.
-
----
-
 ## ⭐ Star the Project
 
 If you found this project helpful, please give it a ⭐ on GitHub!
@@ -536,4 +514,4 @@ If you found this project helpful, please give it a ⭐ on GitHub!
 
 **Built with ❤️ for FitZone Gym Management System**
 
-Repo Linke: https://github.com/uswashaikh/gym-management-system
+Repo Link: https://github.com/uswashaikh/gym-management-system
