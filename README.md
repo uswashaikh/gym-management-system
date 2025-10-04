@@ -510,16 +510,7 @@ Contributions are welcome! Please follow these steps:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
----
-
-## 👨‍💻 Author
-
-**Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your.email@example.com
-- LinkedIn: [Your Name](https://linkedin.com/in/yourname)
-
----
+---ß
 
 ## 🙏 Acknowledgments
 
@@ -545,4 +536,4 @@ If you found this project helpful, please give it a ⭐ on GitHub!
 
 **Built with ❤️ for FitZone Gym Management System**
 
-*Last Updated: October 2024*
+Repo Linke: https://github.com/uswashaikh/gym-management-system
