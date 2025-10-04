@@ -222,8 +222,8 @@ service cloud.firestore {
   - Create user accounts
 
 ### 2. Member
-- **Email**: Auto-generated when admin adds member
-- **Password**: FirstName@123 (e.g., John@123)
+- **Email**: john@gym.com
+- **Password**: John@123
 - **Access**: Personal portal
 - **Capabilities**:
   - View profile
@@ -232,8 +232,8 @@ service cloud.firestore {
   - View notifications
 
 ### 3. User
-- **Email**: Auto-generated when admin creates user
-- **Password**: FirstName@123
+- **Email**: neha@gym.com
+- **Password**: Neha@123
 - **Access**: Read-only
 - **Capabilities**:
   - Search members
